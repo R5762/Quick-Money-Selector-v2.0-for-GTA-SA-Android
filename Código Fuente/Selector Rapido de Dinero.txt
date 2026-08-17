@@ -1,0 +1,480 @@
+{$CLEO .csi}
+
+03A4: script_name "Selector Rapido de Dinero v2.0"
+
+:COMPROBAR_VERSION_DEL_JUEGO
+0DD6: 0@ = get_game_version // android
+00D6: if
+0039:   0@ == 17
+004D: jf @FINALIZAR_SCRIPT
+0001: wait 0 ms
+0002: jump @JUGADOR
+
+:JUGADOR
+0001: wait 0 ms
+00D6: if
+0256:   player $PLAYER_CHAR defined
+004D: jf @JUGADOR
+00D6: if and
+80DF:   not actor $PLAYER_ACTOR driving
+84AD:   not actor $PLAYER_ACTOR in_water
+8818:   not actor $PLAYER_ACTOR in_air
+8A0C:   not player $PLAYER_CHAR on_jetpack
+004D: jf @FINALIZAR_SCRIPT
+01B4: set_player $PLAYER_CHAR can_move 0
+
+:MENU_PRINCIPAL
+0DF6: 1@ = get_menu_active_item_index
+00D6: if
+8039:   not  1@ == 1
+004D: jf @MENU_PRINCIPAL
+0DD0: 1@ = get_label_addr @CADENAS_DE_TEXTO_DEL_MENU_PRINCIPAL // android
+0DF2: create_menu 1@ items 9
+0DF5: set_menu_active_item_index 1@
+
+:OBTENER_ITEM_SELECCIONADO
+0001: wait 0 ms
+0DF4: 2@ = get_menu_touched_item_index maxtime 100
+00D6: if and
+0029:   2@ >= 0
+8029:   not  2@ >= 9
+004D: jf @SALIR_DEL_MENU_PRINCIPAL
+0001: wait 0 ms
+0002: jump @VAR_MNY_001
+
+:SALIR_DEL_MENU_PRINCIPAL
+00D6: if
+0039:   2@ == -2
+004D: jf @OBTENER_ITEM_SELECCIONADO
+0DF3: delete_menu
+0002: jump @VOLVER_A_MOVER
+
+:VAR_MNY_001
+00D6: if
+0039:   2@ == 0
+004D: jf @VAR_MNY_002
+0001: wait 0 ms
+0002: jump @MNY_001
+
+:VAR_MNY_002
+00D6: if
+0039:   2@ == 1
+004D: jf @VAR_MNY_003
+0001: wait 0 ms
+0002: jump @MNY_002
+
+:VAR_MNY_003
+00D6: if
+0039:   2@ == 2
+004D: jf @VAR_MNY_004
+0001: wait 0 ms
+0002: jump @MNY_003
+
+:VAR_MNY_004
+00D6: if
+0039:   2@ == 3
+004D: jf @VAR_MNY_005
+0001: wait 0 ms
+0002: jump @MNY_004
+
+:VAR_MNY_005
+00D6: if
+0039:   2@ == 4
+004D: jf @VAR_MNY_006
+0001: wait 0 ms
+0002: jump @MNY_005
+
+:VAR_MNY_006
+00D6: if
+0039:   2@ == 5
+004D: jf @VAR_MNY_007
+0001: wait 0 ms
+0002: jump @MNY_006
+
+:VAR_MNY_007
+00D6: if
+0039:   2@ == 6
+004D: jf @VAR_MNY_008
+0001: wait 0 ms
+0002: jump @MNY_007
+
+:VAR_MNY_008
+00D6: if
+0039:   2@ == 7
+004D: jf @VAR_MNY_009
+0001: wait 0 ms
+0002: jump @MNY_008
+
+:VAR_MNY_009
+00D6: if
+0039:   2@ == 8
+004D: jf @VAR_MNY_009
+0001: wait 0 ms
+0002: jump @MNY_009
+
+:DIRECCIONES_DE_LA_VERSION_2_00
+0DD8: 3@ = read_mem_addr 0x96B754 size 4 add_ib 1 // android
+0DD9: write_mem_addr 0x96B758 value 3@ size 4 add_ib 1 protect 1 // android
+0051: return
+
+:MNY_001
+0DF3: delete_menu
+01B4: set_player $PLAYER_CHAR can_move 1
+
+:WIDGET_AUMENTAR_DINERO_001
+0001: wait 0 ms
+00D6: if
+0A52:   is_widget_released 50
+004D: jf @WIDGET_DISMINUIR_DINERO_001
+010B: 4@ = player $PLAYER_CHAR money
+0006: 4@ = 1
+0109: player $PLAYER_CHAR money += 4@
+0050: gosub @DIRECCIONES_DE_LA_VERSION_2_00
+
+:WIDGET_DISMINUIR_DINERO_001
+00D6: if
+0A52:   is_widget_released 51
+004D: jf @WIDGET_REGRESAR_A_MENU_PRINCIPAL_001
+010B: 4@ = player $PLAYER_CHAR money
+0006: 4@ = -1
+0109: player $PLAYER_CHAR money += 4@
+0050: gosub @DIRECCIONES_DE_LA_VERSION_2_00
+
+:WIDGET_REGRESAR_A_MENU_PRINCIPAL_001
+00D6: if
+0A52:   is_widget_released 26
+004D: jf @WIDGET_CERRAR_LA_MODIFICACION_001
+0001: wait 0 ms
+0002: jump @JUGADOR
+
+:WIDGET_CERRAR_LA_MODIFICACION_001
+00D6: if
+0A52:   is_widget_released 89
+004D: jf @WIDGET_AUMENTAR_DINERO_001
+0001: wait 0 ms
+0002: jump @FINALIZAR_SCRIPT
+
+:MNY_002
+0DF3: delete_menu
+01B4: set_player $PLAYER_CHAR can_move 1
+
+:WIDGET_AUMENTAR_DINERO_002
+0001: wait 0 ms
+00D6: if
+0A52:   is_widget_released 50
+004D: jf @WIDGET_DISMINUIR_DINERO_002
+010B: 4@ = player $PLAYER_CHAR money
+0006: 4@ = 10
+0109: player $PLAYER_CHAR money += 4@
+0050: gosub @DIRECCIONES_DE_LA_VERSION_2_00
+
+:WIDGET_DISMINUIR_DINERO_002
+00D6: if
+0A52:   is_widget_released 51
+004D: jf @WIDGET_REGRESAR_A_MENU_PRINCIPAL_002
+010B: 4@ = player $PLAYER_CHAR money
+0006: 4@ = -10
+0109: player $PLAYER_CHAR money += 4@
+0050: gosub @DIRECCIONES_DE_LA_VERSION_2_00
+
+:WIDGET_REGRESAR_A_MENU_PRINCIPAL_002
+00D6: if
+0A52:   is_widget_released 26
+004D: jf @WIDGET_CERRAR_LA_MODIFICACION_002
+0001: wait 0 ms
+0002: jump @JUGADOR
+
+:WIDGET_CERRAR_LA_MODIFICACION_002
+00D6: if
+0A52:   is_widget_released 89
+004D: jf @WIDGET_AUMENTAR_DINERO_002
+0001: wait 0 ms
+0002: jump @FINALIZAR_SCRIPT
+
+:MNY_003
+0DF3: delete_menu
+01B4: set_player $PLAYER_CHAR can_move 1
+
+:WIDGET_AUMENTAR_DINERO_003
+0001: wait 0 ms
+00D6: if
+0A52:   is_widget_released 50
+004D: jf @WIDGET_DISMINUIR_DINERO_003
+010B: 4@ = player $PLAYER_CHAR money
+0006: 4@ = 100
+0109: player $PLAYER_CHAR money += 4@
+0050: gosub @DIRECCIONES_DE_LA_VERSION_2_00
+
+:WIDGET_DISMINUIR_DINERO_003
+00D6: if
+0A52:   is_widget_released 51
+004D: jf @WIDGET_REGRESAR_A_MENU_PRINCIPAL_003
+010B: 4@ = player $PLAYER_CHAR money
+0006: 4@ = -100
+0109: player $PLAYER_CHAR money += 4@
+0050: gosub @DIRECCIONES_DE_LA_VERSION_2_00
+
+:WIDGET_REGRESAR_A_MENU_PRINCIPAL_003
+00D6: if
+0A52:   is_widget_released 26
+004D: jf @WIDGET_CERRAR_LA_MODIFICACION_003
+0001: wait 0 ms
+0002: jump @JUGADOR
+
+:WIDGET_CERRAR_LA_MODIFICACION_003
+00D6: if
+0A52:   is_widget_released 89
+004D: jf @WIDGET_AUMENTAR_DINERO_003
+0001: wait 0 ms
+0002: jump @FINALIZAR_SCRIPT
+
+:MNY_004
+0DF3: delete_menu
+01B4: set_player $PLAYER_CHAR can_move 1
+
+:WIDGET_AUMENTAR_DINERO_004
+0001: wait 0 ms
+00D6: if
+0A52:   is_widget_released 50
+004D: jf @WIDGET_DISMINUIR_DINERO_004
+010B: 4@ = player $PLAYER_CHAR money
+0006: 4@ = 1000
+0109: player $PLAYER_CHAR money += 4@
+0050: gosub @DIRECCIONES_DE_LA_VERSION_2_00
+
+:WIDGET_DISMINUIR_DINERO_004
+00D6: if
+0A52:   is_widget_released 51
+004D: jf @WIDGET_REGRESAR_A_MENU_PRINCIPAL_004
+010B: 4@ = player $PLAYER_CHAR money
+0006: 4@ = -1000
+0109: player $PLAYER_CHAR money += 4@
+0050: gosub @DIRECCIONES_DE_LA_VERSION_2_00
+
+:WIDGET_REGRESAR_A_MENU_PRINCIPAL_004
+00D6: if
+0A52:   is_widget_released 26
+004D: jf @WIDGET_CERRAR_LA_MODIFICACION_004
+0001: wait 0 ms
+0002: jump @JUGADOR
+
+:WIDGET_CERRAR_LA_MODIFICACION_004
+00D6: if
+0A52:   is_widget_released 89
+004D: jf @WIDGET_AUMENTAR_DINERO_004
+0001: wait 0 ms
+0002: jump @FINALIZAR_SCRIPT
+
+:MNY_005
+0DF3: delete_menu
+01B4: set_player $PLAYER_CHAR can_move 1
+
+:WIDGET_AUMENTAR_DINERO_005
+0001: wait 0 ms
+00D6: if
+0A52:   is_widget_released 50
+004D: jf @WIDGET_DISMINUIR_DINERO_005
+010B: 4@ = player $PLAYER_CHAR money
+0006: 4@ = 10000
+0109: player $PLAYER_CHAR money += 4@
+0050: gosub @DIRECCIONES_DE_LA_VERSION_2_00
+
+:WIDGET_DISMINUIR_DINERO_005
+00D6: if
+0A52:   is_widget_released 51
+004D: jf @WIDGET_REGRESAR_A_MENU_PRINCIPAL_005
+010B: 4@ = player $PLAYER_CHAR money
+0006: 4@ = -10000
+0109: player $PLAYER_CHAR money += 4@
+0050: gosub @DIRECCIONES_DE_LA_VERSION_2_00
+
+:WIDGET_REGRESAR_A_MENU_PRINCIPAL_005
+00D6: if
+0A52:   is_widget_released 26
+004D: jf @WIDGET_CERRAR_LA_MODIFICACION_005
+0001: wait 0 ms
+0002: jump @JUGADOR
+
+:WIDGET_CERRAR_LA_MODIFICACION_005
+00D6: if
+0A52:   is_widget_released 89
+004D: jf @WIDGET_AUMENTAR_DINERO_005
+0001: wait 0 ms
+0002: jump @FINALIZAR_SCRIPT
+
+:MNY_006
+0DF3: delete_menu
+01B4: set_player $PLAYER_CHAR can_move 1
+
+:WIDGET_AUMENTAR_DINERO_006
+0001: wait 0 ms
+00D6: if
+0A52:   is_widget_released 50
+004D: jf @WIDGET_DISMINUIR_DINERO_006
+010B: 4@ = player $PLAYER_CHAR money
+0006: 4@ = 100000
+0109: player $PLAYER_CHAR money += 4@
+0050: gosub @DIRECCIONES_DE_LA_VERSION_2_00
+
+:WIDGET_DISMINUIR_DINERO_006
+00D6: if
+0A52:   is_widget_released 51
+004D: jf @WIDGET_REGRESAR_A_MENU_PRINCIPAL_006
+010B: 4@ = player $PLAYER_CHAR money
+0006: 4@ = -100000
+0109: player $PLAYER_CHAR money += 4@
+0050: gosub @DIRECCIONES_DE_LA_VERSION_2_00
+
+:WIDGET_REGRESAR_A_MENU_PRINCIPAL_006
+00D6: if
+0A52:   is_widget_released 26
+004D: jf @WIDGET_CERRAR_LA_MODIFICACION_006
+0001: wait 0 ms
+0002: jump @JUGADOR
+
+:WIDGET_CERRAR_LA_MODIFICACION_006
+00D6: if
+0A52:   is_widget_released 89
+004D: jf @WIDGET_AUMENTAR_DINERO_006
+0001: wait 0 ms
+0002: jump @FINALIZAR_SCRIPT
+
+:MNY_007
+0DF3: delete_menu
+01B4: set_player $PLAYER_CHAR can_move 1
+
+:WIDGET_AUMENTAR_DINERO_007
+0001: wait 0 ms
+00D6: if
+0A52:   is_widget_released 50
+004D: jf @WIDGET_DISMINUIR_DINERO_007
+010B: 4@ = player $PLAYER_CHAR money
+0006: 4@ = 1000000
+0109: player $PLAYER_CHAR money += 4@
+0050: gosub @DIRECCIONES_DE_LA_VERSION_2_00
+
+:WIDGET_DISMINUIR_DINERO_007
+00D6: if
+0A52:   is_widget_released 51
+004D: jf @WIDGET_REGRESAR_A_MENU_PRINCIPAL_007
+010B: 4@ = player $PLAYER_CHAR money
+0006: 4@ = -1000000
+0109: player $PLAYER_CHAR money += 4@
+0050: gosub @DIRECCIONES_DE_LA_VERSION_2_00
+
+:WIDGET_REGRESAR_A_MENU_PRINCIPAL_007
+00D6: if
+0A52:   is_widget_released 26
+004D: jf @WIDGET_CERRAR_LA_MODIFICACION_007
+0001: wait 0 ms
+0002: jump @JUGADOR
+
+:WIDGET_CERRAR_LA_MODIFICACION_007
+00D6: if
+0A52:   is_widget_released 89
+004D: jf @WIDGET_AUMENTAR_DINERO_007
+0001: wait 0 ms
+0002: jump @FINALIZAR_SCRIPT
+
+:MNY_008
+0DF3: delete_menu
+01B4: set_player $PLAYER_CHAR can_move 1
+
+:WIDGET_AUMENTAR_DINERO_008
+0001: wait 0 ms
+00D6: if
+0A52:   is_widget_released 50
+004D: jf @WIDGET_DISMINUIR_DINERO_008
+010B: 4@ = player $PLAYER_CHAR money
+0006: 4@ = 10000000
+0109: player $PLAYER_CHAR money += 4@
+0050: gosub @DIRECCIONES_DE_LA_VERSION_2_00
+
+:WIDGET_DISMINUIR_DINERO_008
+00D6: if
+0A52:   is_widget_released 51
+004D: jf @WIDGET_REGRESAR_A_MENU_PRINCIPAL_008
+010B: 4@ = player $PLAYER_CHAR money
+0006: 4@ = -10000000
+0109: player $PLAYER_CHAR money += 4@
+0050: gosub @DIRECCIONES_DE_LA_VERSION_2_00
+
+:WIDGET_REGRESAR_A_MENU_PRINCIPAL_008
+00D6: if
+0A52:   is_widget_released 26
+004D: jf @WIDGET_CERRAR_LA_MODIFICACION_008
+0001: wait 0 ms
+0002: jump @JUGADOR
+
+:WIDGET_CERRAR_LA_MODIFICACION_008
+00D6: if
+0A52:   is_widget_released 89
+004D: jf @WIDGET_AUMENTAR_DINERO_008
+0001: wait 0 ms
+0002: jump @FINALIZAR_SCRIPT
+
+:MNY_009
+0DF3: delete_menu
+01B4: set_player $PLAYER_CHAR can_move 1
+
+:WIDGET_AUMENTAR_DINERO_009
+0001: wait 0 ms
+00D6: if
+0A52:   is_widget_released 50
+004D: jf @WIDGET_DISMINUIR_DINERO_009
+010B: 4@ = player $PLAYER_CHAR money
+0006: 4@ = 100000000
+0109: player $PLAYER_CHAR money += 4@
+0050: gosub @DIRECCIONES_DE_LA_VERSION_2_00
+
+:WIDGET_DISMINUIR_DINERO_009
+00D6: if
+0A52:   is_widget_released 51
+004D: jf @WIDGET_REGRESAR_A_MENU_PRINCIPAL_009
+010B: 4@ = player $PLAYER_CHAR money
+0006: 4@ = -100000000
+0109: player $PLAYER_CHAR money += 4@
+0050: gosub @DIRECCIONES_DE_LA_VERSION_2_00
+
+:WIDGET_REGRESAR_A_MENU_PRINCIPAL_009
+00D6: if
+0A52:   is_widget_released 26
+004D: jf @WIDGET_CERRAR_LA_MODIFICACION_009
+0001: wait 0 ms
+0002: jump @JUGADOR
+
+:WIDGET_CERRAR_LA_MODIFICACION_009
+00D6: if
+0A52:   is_widget_released 89
+004D: jf @WIDGET_AUMENTAR_DINERO_009
+0001: wait 0 ms
+0002: jump @FINALIZAR_SCRIPT
+
+:VOLVER_A_MOVER
+0001: wait 0 ms
+01B4: set_player $PLAYER_CHAR can_move 1
+0002: jump @FINALIZAR_SCRIPT
+
+:FINALIZAR_SCRIPT
+004E: terminate_this_script
+
+:CADENAS_DE_TEXTO_DEL_MENU_PRINCIPAL
+hex
+    // Indicadores
+    00 00 00 00
+    // Titulo
+    "Selector" 20 "Rapido" 20 "de" 20 "Dinero" 20 "v2.0" 00
+    // Cerrar menu
+    "Cerrar" 00
+    // Elementos
+    "1" 00
+    "10" 00
+    "100" 00
+    "1,000" 00
+    "10,000" 00
+    "100,000" 00
+    "1,000,000" 00
+    "10,000,000" 00
+    "100,000,000" 00
+    00
+end
